@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
      name='psy_llm_chat',  
-     version='0.1',
+     version='0.1.1',
      py_modules=['psy_llm_chat'] ,
      author="Cole Robertson",
      author_email="cbjrobertson@gmail.com",

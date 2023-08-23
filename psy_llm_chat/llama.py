@@ -29,8 +29,8 @@ class LlamaChat(object):
     STOP = "END_THIS_NOW"
     def __init__(self,
                  model_name,
+                 quantization,
                  peft_model: str=None,
-                 quantization: bool=True,
                  max_new_tokens: int=256, #The maximum numbers of tokens to generate
                  min_new_tokens: int=0, #The minimum numbers of tokens to generate
                  seed: int=42, #seed value for reproducibility
