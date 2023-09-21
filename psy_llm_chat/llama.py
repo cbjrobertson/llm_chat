@@ -141,7 +141,6 @@ class LlamaChat(object):
         )
         return dialog_tokens
         
-    
     def dialog_item_to_string(self,
                        dialog_item):
         return f"{dialog_item['role'].capitalize()}: {dialog_item['content']}"
@@ -239,6 +238,16 @@ class LlamaChat(object):
             )
         return outputs
         
+    def get_response(self,
+                     dialog):
+        _dialog = deepcopy(dialog)
+        output = self.generate(_dialog)
+        outputs += [output]
+        output_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
+        last_output = output_text.split(LlamaChat.E_INST)[-1]
+        _dialog += [{"role":"assistant","content":last_output}]
+        return _dialog
+            
     def __call__(self,
                 dialog):
         _dialog = deepcopy(dialog)

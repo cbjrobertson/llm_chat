@@ -50,7 +50,16 @@ class GptChat(object):
     def _slicer(self,res,kind):
         if self.model.startswith("gpt-4"):
             return res["choices"][0]["message"][kind]
-                    
+        
+    def get_response(self,
+                     dialog):
+        _dialog = deepcopy(dialog)
+        res = self._error_wrapper(_dialog)
+        content = self._slicer(res,"content")
+        role = self._slicer(res,"role")
+        _dialog += [{"role":role,"content":content}]
+        return _dialog
+
     def run_chat(self,
                  dialog):
         _dialog = deepcopy(dialog)
