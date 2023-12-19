@@ -1,11 +1,12 @@
-import openai 
 import time
 import json
 from copy import deepcopy
 
+
 class GptChat(object):
     STOP = "END_THIS_NOW"
     def __init__(self,
+                 client,
                  model="gpt-4",
                  temperature=0.6,
                  max_tokens=1000,
@@ -14,6 +15,7 @@ class GptChat(object):
                  presence_penalty=0.0,
                  sleep=300,
                 silent=False):
+        self.client = client
         self.model = model
         self.temperature=temperature
         self.max_tokens=max_tokens
@@ -25,7 +27,7 @@ class GptChat(object):
     
     def _call_api(self,
                  _dialog):
-        return openai.ChatCompletion.create(
+        return self.client.chat.completions.create(
             model=self.model,
             messages=_dialog,
             temperature=self.temperature,
@@ -33,7 +35,7 @@ class GptChat(object):
             top_p=self.top_p,
             frequency_penalty=self.frequency_penalty,
             presence_penalty=self.presence_penalty,
-        )
+        ).model_dump()
     
     def _error_wrapper(self,
                   _dialog):

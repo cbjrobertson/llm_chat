@@ -1,0 +1,18 @@
+accelerate==0.25.0
+appdirs==1.4.4
+loralib==0.1.2
+bitsandbytes==0.41.3.post2
+black==23.12.0
+black[jupyter]==23.12.0
+datasets==2.15.0
+fire==0.5.0
+peft==0.7.1
+transformers==4.36.2
+sentencepiece==0.1.99
+py7zr==0.20.8
+scipy==1.11.4
+optimum==1.16.1
+openai==1.5.0
+spacy==3.6.1
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.6.0/en_core_web_sm-3.6.0-py3-none-any.whl
+
