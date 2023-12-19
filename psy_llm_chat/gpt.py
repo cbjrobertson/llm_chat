@@ -7,17 +7,21 @@ class GptChat(object):
     STOP = "END_THIS_NOW"
     def __init__(self,
                  model="gpt-4",
-                 temperature=0.5,
+                 temperature=0.6,
                  max_tokens=1000,
                  top_p=1,
                  frequency_penalty=0.0,
-                 presence_penalty=0.0):
+                 presence_penalty=0.0,
+                 sleep=300,
+                silent=False):
         self.model = model
         self.temperature=temperature
         self.max_tokens=max_tokens
         self.top_p=top_p
+        self.sleep = sleep
         self.frequency_penalty=frequency_penalty
         self.presence_penalty=presence_penalty
+        self.silent = silent
     
     def _call_api(self,
                  _dialog):
@@ -37,7 +41,7 @@ class GptChat(object):
             response = self._call_api(_dialog)
         except Exception as e:
             print(f"An exception occurred: {e}")
-            time.sleep(300)
+            time.sleep(self.sleep)
             response = self._call_api(_dialog)
         return response
     
@@ -58,6 +62,8 @@ class GptChat(object):
         content = self._slicer(res,"content")
         role = self._slicer(res,"role")
         _dialog += [{"role":role,"content":content}]
+        if not self.silent:
+            self._print_dialog(_dialog)
         return _dialog
 
     def run_chat(self,

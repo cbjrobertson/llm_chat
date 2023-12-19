@@ -56,6 +56,7 @@ class LlamaChat(object):
         self.length_penalty = length_penalty
         self.output_hidden_states = output_hidden_states
         self.output_attentions = output_attentions
+        self.outputs = []
         
          # Set the seeds for reproducibility
         torch.cuda.manual_seed(seed)
@@ -242,10 +243,11 @@ class LlamaChat(object):
                      dialog):
         _dialog = deepcopy(dialog)
         output = self.generate(_dialog)
-        outputs += [output]
+        self.outputs += [output]
         output_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
         last_output = output_text.split(LlamaChat.E_INST)[-1]
         _dialog += [{"role":"assistant","content":last_output}]
+        self.print_dialog(_dialog)
         return _dialog
             
     def __call__(self,
