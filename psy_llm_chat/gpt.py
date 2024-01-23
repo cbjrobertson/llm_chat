@@ -14,7 +14,7 @@ class GptChat(object):
                  frequency_penalty=0.0,
                  presence_penalty=0.0,
                  sleep=300,
-                silent=False):
+                 silent=False):
         self.client = client
         self.model = model
         self.temperature=temperature

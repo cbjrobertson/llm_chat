@@ -43,7 +43,8 @@ class LlamaChat(object):
                  length_penalty: int=1, #[optional] Exponential penalty to the length that is used with beam-based generation.
                  use_fast_kernels: bool = False, # Enable using SDPA from PyTroch Accelerated Transformers, make use Flash Attention and Xformer memory-efficient kernels
                  output_hidden_states: bool = False, #[optional] Enable extraction of hidden states using LlamaChat.extract_hidden_states
-                 output_attentions: bool = False #[optional] Enable extraction of attention layers using LlamaChat.extract_hidden_states
+                 output_attentions: bool = False, #[optional] Enable extraction of attention layers using LlamaChat.extract_hidden_states
+                 silent: bool = False #[optional] Toggle dialog printing
                 ):
         self.max_new_tokens = max_new_tokens
         self.min_new_tokens = min_new_tokens
@@ -57,6 +58,7 @@ class LlamaChat(object):
         self.output_hidden_states = output_hidden_states
         self.output_attentions = output_attentions
         self.outputs = []
+        self.silent = silent
         
          # Set the seeds for reproducibility
         torch.cuda.manual_seed(seed)
@@ -247,13 +249,15 @@ class LlamaChat(object):
         output_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
         last_output = output_text.split(LlamaChat.E_INST)[-1]
         _dialog += [{"role":"assistant","content":last_output}]
-        self.print_dialog(_dialog)
+        if not self.silent:
+            self.print_dialog(_dialog)
         return _dialog
             
     def __call__(self,
                 dialog):
         _dialog = deepcopy(dialog)
-        self.print_dialog(_dialog)
+        if not self.silent:
+            self.print_dialog(_dialog)
         inp = False
         outputs = []
         while inp != LlamaChat.STOP:
@@ -262,7 +266,8 @@ class LlamaChat(object):
             output_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
             last_output = output_text.split(LlamaChat.E_INST)[-1]
             _dialog += [{"role":"assistant","content":last_output}]
-            print(self.dialog_item_to_string(_dialog[-1]))
+            if not self.silent:
+                print(self.dialog_item_to_string(_dialog[-1]))
             inp = input("User: ")
             _dialog += [{"role":"user","content":inp}]
         return _dialog
