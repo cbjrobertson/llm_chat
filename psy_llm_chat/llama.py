@@ -24,7 +24,7 @@ def load_model(model_name, quantization, output_hidden_states=False, output_atte
 
 
 class LlamaChat(object):
-    B_INST, E_INST = "[INST]", "[/INST]\n"
+    B_INST, E_INST = "<s>[INST]", "[/INST]\n"
     B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"
     STOP = "END_THIS_NOW"
     def __init__(self,
@@ -140,7 +140,7 @@ class LlamaChat(object):
             _dialog[-1]["role"] == "user"
         ), f"Last message must be from user, got {_dialog[-1]['role']}"
         dialog_tokens += self.tokenizer.encode(
-            f"{LlamaChat.B_INST} {(_dialog[-1]['content']).strip()} {LlamaChat.E_INST}",
+            f"{LlamaChat.B_INST} {(_dialog[-1]['content']).strip()} {LlamaChat.E_INST}</s>",
         )
         return dialog_tokens
         
@@ -237,6 +237,7 @@ class LlamaChat(object):
                 top_k=self.top_k,
                 repetition_penalty=self.repetition_penalty,
                 length_penalty=self.length_penalty,
+                pad_token_id=self.tokenizer.eos_token_id,
                 **kwargs
             )
         return outputs
